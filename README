@@ -1,0 +1,12 @@
+Bindings to the mpdecimal library by Stefan Krah, which is available at
+
+http://www.bytereef.org/mpdecimal
+
+mpdecimal provides decimal floating point arithmetic.  It currently is
+the basis for the decimal library in the Python standard library.
+More information on decimal arithmetic is at
+
+http://speleotrove.com/decimal/
+
+These bindings were written for mpdecimal version 2.4.0.  You will
+need to install mpdecimal before you install this library.
