@@ -10,3 +10,5 @@ http://speleotrove.com/decimal/
 
 These bindings were written for mpdecimal version 2.4.0.  You will
 need to install mpdecimal before you install this library.
+
+WARNING - this is a work in progress, don't use it yet!
