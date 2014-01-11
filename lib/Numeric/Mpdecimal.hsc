@@ -114,224 +114,171 @@ instance Storable Mpd_spec_t where
     #{poke mpd_spec_t, grouping} p gr
 
 
--- Line 1: /*
--- Line 2:  * Copyright (c) 2008-2016 Stefan Krah. All rights reserved.
--- Line 3:  *
--- Line 4:  * Redistribution and use in source and binary forms, with or without
--- Line 5:  * modification, are permitted provided that the following conditions
--- Line 6:  * are met:
--- Line 7:  *
--- Line 8:  * 1. Redistributions of source code must retain the above copyright
--- Line 9:  *    notice, this list of conditions and the following disclaimer.
--- Line 10:  *
--- Line 11:  * 2. Redistributions in binary form must reproduce the above copyright
--- Line 12:  *    notice, this list of conditions and the following disclaimer in the
--- Line 13:  *    documentation and/or other materials provided with the distribution.
--- Line 14:  *
--- Line 15:  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS "AS IS" AND
--- Line 16:  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
--- Line 17:  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
--- Line 18:  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
--- Line 19:  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
--- Line 20:  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
--- Line 21:  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
--- Line 22:  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
--- Line 23:  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
--- Line 24:  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
--- Line 25:  * SUCH DAMAGE.
--- Line 26:  */
--- Line 27: 
--- Line 28: 
--- Line 29: #ifndef MPDECIMAL_H
--- Line 30: #define MPDECIMAL_H
--- Line 31: 
--- Line 32: 
--- Line 33: #ifdef __cplusplus
--- Line 34: extern "C" {
--- Line 35:   #ifndef __STDC_LIMIT_MACROS
--- Line 36:     #define __STDC_LIMIT_MACROS
--- Line 37:     #define MPD_CLEAR_STDC_LIMIT_MACROS
--- Line 38:   #endif
--- Line 39: #endif
--- Line 40: 
--- Line 41: 
--- Line 42: #include <stdio.h>
--- Line 43: #include <stdlib.h>
--- Line 44: #include <string.h>
--- Line 45: #include <limits.h>
--- Line 46: #include <assert.h>
--- Line 47: #include <stdint.h>
--- Line 48: #include <inttypes.h>
--- Line 49: 
--- Line 50: 
--- Line 51: #ifndef __GNUC_STDC_INLINE__
--- Line 52:   #define __GNUC_STDC_INLINE__ 1
--- Line 53: #endif
--- Line 54: #if defined(__GNUC__) && !defined(__INTEL_COMPILER)
--- Line 55:   #define UNUSED __attribute__((unused))
--- Line 56: #else
--- Line 57:   #define UNUSED
--- Line 58: #endif
--- Line 59: #if (defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)) && \
--- Line 60:     defined(__GNUC__) && __GNUC__ >= 4 && !defined(__INTEL_COMPILER)
--- Line 61:   #define MPD_PRAGMA(x) _Pragma(x)
--- Line 62:   #define MPD_HIDE_SYMBOLS_START "GCC visibility push(hidden)"
--- Line 63:   #define MPD_HIDE_SYMBOLS_END "GCC visibility pop"
--- Line 64: #else
--- Line 65:   #define MPD_PRAGMA(x)
--- Line 66:   #define MPD_HIDE_SYMBOLS_START
--- Line 67:   #define MPD_HIDE_SYMBOLS_END
--- Line 68: #endif
--- Line 69: 
--- Line 70: 
--- Line 71: #if !defined(LEGACY_COMPILER)
--- Line 72:   #if !defined(UINT64_MAX)
--- Line 73:     /* The following #error is just a warning. If the compiler indeed does
--- Line 74:      * not have uint64_t, it is perfectly safe to comment out the #error. */
--- Line 75:     #error "Warning: Compiler without uint64_t. Comment out this line."
--- Line 76:     #define LEGACY_COMPILER
--- Line 77:   #endif
--- Line 78: #endif
--- Line 79: 
--- Line 80: 
--- Line 81: /******************************************************************************/
--- Line 82: /*                                  Version                                   */
--- Line 83: /******************************************************************************/
--- Line 84: 
 -- Line 85: #define MPD_MAJOR_VERSION 2
+mpd_major_version :: #type MPD_MAJOR_VERSION
+mpd_major_version = #const MPD_MAJOR_VERSION
+
 -- Line 86: #define MPD_MINOR_VERSION 4
+mpd_minor_version :: #type MPD_MINOR_VERSION
+mpd_minor_version = #const MPD_MINOR_VERSION
+
 -- Line 87: #define MPD_MICRO_VERSION 0
--- Line 88: 
+mpd_micro_version :: #type MPD_MICRO_VERSION
+mpd_micro_version = #const MPD_MICRO_VERSION
+
 -- Line 89: #define MPD_VERSION "2.4.0"
--- Line 90: 
--- Line 91: const char *mpd_version(void);
--- Line 92: 
--- Line 93: 
--- Line 94: /******************************************************************************/
--- Line 95: /*                              Configuration                                 */
--- Line 96: /******************************************************************************/
--- Line 97: 
--- Line 98: /* ABI: 64-bit */
--- Line 99: #ifdef CONFIG_32
--- Line 100:   #error "cannot use CONFIG_32 with 64-bit header."
--- Line 101: #endif
--- Line 102: 
--- Line 103: #ifndef CONFIG_64
--- Line 104:   #define CONFIG_64
--- Line 105: #endif
--- Line 106: 
--- Line 107: 
--- Line 108: /* BEGIN CONFIG_64 */
--- Line 109: #if defined(CONFIG_64)
+
+mpd_version :: #type MPD_VERSION
+mpd_version = #const_str MPD_VERSION
+
 -- Line 110: /* types for modular and base arithmetic */
 -- Line 111: #define MPD_UINT_MAX UINT64_MAX
+mpd_uint_max :: #type MPD_UINT_MAX
+mpd_uint_max = MPD_UINT_MAX
+
 -- Line 112: #define MPD_BITS_PER_UINT 64
+mpd_bits_per_uint :: #type MPD_BITS_PER_UINT
+mpd_bits_per_uint = #const MPD_BITS_PER_UINT
+
 -- Line 113: typedef uint64_t mpd_uint_t;  /* unsigned mod type */
--- Line 114: 
+type Uint64_t = #type mpd_uint_t
+
 -- Line 115: #define MPD_SIZE_MAX SIZE_MAX
+mpd_size_max :: #type MPD_SIZE_MAX
+mpd_size_max = #const MPD_SIZE_MAX
+
 -- Line 116: typedef size_t mpd_size_t; /* unsigned size type */
 -- Line 117: 
 -- Line 118: /* type for exp, digits, len, prec */
 -- Line 119: #define MPD_SSIZE_MAX INT64_MAX
+mpd_ssize_max :: #type MPD_SSIZE_MAX
+mpd_ssize_max = #const MPD_SSIZE_MAX
+
 -- Line 120: #define MPD_SSIZE_MIN INT64_MIN
+mpd_ssize_min :: #type MPD_SSIZE_MIN
+mpd_ssize_min = #const MPD_SSIZE_MIN
+
 -- Line 121: typedef int64_t mpd_ssize_t;
+
+type Int64_t = #type mpd_ssize_t
+
 -- Line 122: #define _mpd_strtossize strtoll
 -- Line 123: 
 -- Line 124: /* decimal arithmetic */
 -- Line 125: #define MPD_RADIX 10000000000000000000ULL  /* 10**19 */
+mpd_radix :: #type MPD_RADIX
+mpd_radix = #const MPD_RADIX
+
 -- Line 126: #define MPD_RDIGITS 19
+mpd_rdigits :: #type MPD_RDIGITS
+mpd_rdigits = #const MPD_RDIGITS
+
 -- Line 127: #define MPD_MAX_POW10 19
+mpd_max_pow10 :: #type MPD_MAX_POW10
+mpd_max_pow10 = #const MPD_MAX_POW10
+
 -- Line 128: #define MPD_EXPDIGITS 19  /* MPD_EXPDIGITS <= MPD_RDIGITS+1 */
+mpd_expdigits :: #type MPD_EXPDIGITS
+mpd_expdigits = #const MPD_EXPDIGITS
+
 -- Line 129: 
 -- Line 130: #define MPD_MAXTRANSFORM_2N 4294967296ULL      /* 2**32 */
+mpd_maxtransform_2n :: #type MPD_MAXTRANSFORM_2N
+mpd_maxtransform_2n = #const MPD_MAXTRANSFORM_2N
+
 -- Line 131: #define MPD_MAX_PREC 999999999999999999LL
+mpd_max_prec :: #type MPD_MAX_PREC
+mpd_max_prec = #const MPD_MAX_PREC
+
 -- Line 132: #define MPD_MAX_PREC_LOG2 64
+mpd_max_prec_log2 :: #type MPD_MAX_PREC_LOG2
+mpd_max_prec_log2 = #const MPD_MAX_PREC_LOG2
+
 -- Line 133: #define MPD_ELIMIT  1000000000000000000LL
+mpd_elimit :: #type MPD_ELIMIT
+mpd_elimit = #const MPD_ELIMIT
+
 -- Line 134: #define MPD_MAX_EMAX   999999999999999999LL    /* ELIMIT-1 */
+mpd_max_emax :: #type MPD_MAX_EMAX
+mpd_max_emax = #const MPD_MAX_EMAX
+
 -- Line 135: #define MPD_MIN_EMIN  (-999999999999999999LL)  /* -EMAX */
+mpd_min_emin :: #type MPD_MIN_EMIN
+mpd_min_emin = #const MPD_MIN_EMIN
+
 -- Line 136: #define MPD_MIN_ETINY (MPD_MIN_EMIN-(MPD_MAX_PREC-1))
+mpd_min_etiny :: #type MPD_MIN_ETINY
+mpd_min_etiny = #const MPD_MIN_ETINY
+
 -- Line 137: #define MPD_EXP_INF 2000000000000000001LL
+mpd_exp_inf :: #type MPD_EXP_INF
+mpd_exp_inf = #const MPD_EXP_INF
+
 -- Line 138: #define MPD_EXP_CLAMP (-4000000000000000001LL)
+mpd_exp_clamp :: #type MPD_EXP_CLAMP
+mpd_exp_clamp = #const MPD_EXP_CLAMP
+
 -- Line 139: #define MPD_MAXIMPORT 105263157894736842L /* ceil((2*MPD_MAX_PREC)/MPD_RDIGITS) */
--- Line 140: 
--- Line 141: /* conversion specifiers */
--- Line 142: #define PRI_mpd_uint_t PRIu64
--- Line 143: #define PRI_mpd_ssize_t PRIi64
--- Line 144: /* END CONFIG_64 */
--- Line 145: 
--- Line 146: 
--- Line 147: /* BEGIN CONFIG_32 */
--- Line 148: #elif defined(CONFIG_32)
--- Line 149: /* types for modular and base arithmetic */
--- Line 150: #define MPD_UINT_MAX UINT32_MAX
--- Line 151: #define MPD_BITS_PER_UINT 32
--- Line 152: typedef uint32_t mpd_uint_t;  /* unsigned mod type */
--- Line 153: 
--- Line 154: #ifndef LEGACY_COMPILER
--- Line 155: #define MPD_UUINT_MAX UINT64_MAX
--- Line 156: typedef uint64_t mpd_uuint_t; /* double width unsigned mod type */
--- Line 157: #endif
--- Line 158: 
--- Line 159: #define MPD_SIZE_MAX SIZE_MAX
--- Line 160: typedef size_t mpd_size_t; /* unsigned size type */
--- Line 161: 
--- Line 162: /* type for dec->len, dec->exp, ctx->prec */
--- Line 163: #define MPD_SSIZE_MAX INT32_MAX
--- Line 164: #define MPD_SSIZE_MIN INT32_MIN
--- Line 165: typedef int32_t mpd_ssize_t;
--- Line 166: #define _mpd_strtossize strtol
--- Line 167: 
--- Line 168: /* decimal arithmetic */
--- Line 169: #define MPD_RADIX 1000000000UL  /* 10**9 */
--- Line 170: #define MPD_RDIGITS 9
--- Line 171: #define MPD_MAX_POW10 9
--- Line 172: #define MPD_EXPDIGITS 10 /* MPD_EXPDIGITS <= MPD_RDIGITS+1 */
--- Line 173: 
--- Line 174: #define MPD_MAXTRANSFORM_2N 33554432UL /* 2**25 */
--- Line 175: #define MPD_MAX_PREC 425000000L
--- Line 176: #define MPD_MAX_PREC_LOG2 32
--- Line 177: #define MPD_ELIMIT 425000001L
--- Line 178: #define MPD_MAX_EMAX 425000000L        /* ELIMIT-1 */
--- Line 179: #define MPD_MIN_EMIN (-425000000L)     /* -EMAX */
--- Line 180: #define MPD_MIN_ETINY (MPD_MIN_EMIN-(MPD_MAX_PREC-1))
--- Line 181: #define MPD_EXP_INF 1000000001L      /* allows for emax=999999999 in the tests */
--- Line 182: #define MPD_EXP_CLAMP (-2000000001L) /* allows for emin=-999999999 in the tests */
--- Line 183: #define MPD_MAXIMPORT 94444445L      /* ceil((2*MPD_MAX_PREC)/MPD_RDIGITS) */
--- Line 184: 
--- Line 185: /* conversion specifiers */
--- Line 186: #define PRI_mpd_uint_t PRIu32
--- Line 187: #define PRI_mpd_ssize_t PRIi32
--- Line 188: /* END CONFIG_32 */
--- Line 189: 
--- Line 190: #else
--- Line 191:   #error "define CONFIG_64 or CONFIG_32"
--- Line 192: #endif
--- Line 193: /* END CONFIG */
--- Line 194: 
--- Line 195: 
--- Line 196: #if MPD_SIZE_MAX != MPD_UINT_MAX
--- Line 197:   #error "unsupported platform: need mpd_size_t == mpd_uint_t"
--- Line 198: #endif
--- Line 199: 
--- Line 200: 
+mpd_maximport :: #type MPD_MAXIMPORT
+mpd_maximport = #const MPD_MAXIMPORT
+
 -- Line 201: /******************************************************************************/
 -- Line 202: /*                                Context                                     */
 -- Line 203: /******************************************************************************/
 -- Line 204: 
 -- Line 205: enum {
 -- Line 206:     MPD_ROUND_UP,          /* round away from 0               */
+mpd_round_up :: #type MPD_ROUND_UP
+mpd_round_up = #const MPD_ROUND_UP
+
 -- Line 207:     MPD_ROUND_DOWN,        /* round toward 0 (truncate)       */
+mpd_round_down :: #type MPD_ROUND_DOWN
+mpd_round_down = #const MPD_ROUND_DOWN
+
 -- Line 208:     MPD_ROUND_CEILING,     /* round toward +infinity          */
+mpd_round_ceiling :: #type MPD_ROUND_CEILING
+mpd_round_ceiling = #const MPD_ROUND_CEILING
+
 -- Line 209:     MPD_ROUND_FLOOR,       /* round toward -infinity          */
+mpd_round_floor :: #type MPD_ROUND_FLOOR
+mpd_round_floor = #const MPD_ROUND_FLOOR
+
 -- Line 210:     MPD_ROUND_HALF_UP,     /* 0.5 is rounded up               */
+mpd_round_half_up :: #type MPD_ROUND_HALF_UP
+mpd_round_half_up = #const MPD_ROUND_HALF_UP
+
 -- Line 211:     MPD_ROUND_HALF_DOWN,   /* 0.5 is rounded down             */
+mpd_round_half_down :: #type MPD_ROUND_HALF_DOWN
+mpd_round_half_down = #const MPD_ROUND_HALF_DOWN
+
 -- Line 212:     MPD_ROUND_HALF_EVEN,   /* 0.5 is rounded to even          */
+mpd_round_half_even :: #type MPD_ROUND_HALF_EVEN
+mpd_round_half_even = #const MPD_ROUND_HALF_EVEN
+
 -- Line 213:     MPD_ROUND_05UP,        /* round zero or five away from 0  */
+mpd_round_05up :: #type MPD_ROUND_05UP
+mpd_round_05up = #const MPD_ROUND_05UP
+
 -- Line 214:     MPD_ROUND_TRUNC,       /* truncate, but set infinity      */
+mpd_round_trunc :: #type MPD_ROUND_TRUNC
+mpd_round_trunc = #const MPD_ROUND_TRUNC
+
 -- Line 215:     MPD_ROUND_GUARD
+mpd_round_guard :: #type MPD_ROUND_GUARD
+mpd_round_guard = #const MPD_ROUND_GUARD
+
 -- Line 216: };
 -- Line 217: 
 -- Line 218: enum { MPD_CLAMP_DEFAULT, MPD_CLAMP_IEEE_754, MPD_CLAMP_GUARD };
+mpd_clamp_default :: #type MPD_CLAMP_DEFAULT
+mpd_clamp_default = #const MPD_CLAMP_DEFAULT
+
+mpd_clamp_ieee_754 :: #type MPD_CLAMP_IEEE_754
+mpd_clamp_ieee_754 = #const MPD_CLAMP_IEEE_754
+
+mpd_clamp_guard :: #type MPD_CLAMP_GUARD
+mpd_clamp_guard = #const MPD_CLAMP_GUARD
+
 -- Line 219: 
 -- Line 220: extern const char *mpd_round_string[MPD_ROUND_GUARD];
 -- Line 221: extern const char *mpd_clamp_string[MPD_CLAMP_GUARD];
