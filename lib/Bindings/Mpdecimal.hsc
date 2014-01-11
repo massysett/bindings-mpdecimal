@@ -142,8 +142,8 @@ import Foreign.Ptr
 #ccall mpd_snprint_flags , CString -> CInt -> CUInt -> IO CInt
 #ccall mpd_lsnprint_flags , CString -> CInt -> CUInt -> Ptr CString -> IO CInt
 #ccall mpd_lsnprint_signals , CString -> CInt -> CUInt -> Ptr CString -> IO CInt
--- next line is removed - prints to a C file object -}
--- #ccall mpd_fprint , Ptr <_IO_FILE> -> Ptr <mpd_t> -> IO () -}
+-- next line is removed - prints to a C file object
+-- #ccall mpd_fprint , Ptr <_IO_FILE> -> Ptr <mpd_t> -> IO ()
 #ccall mpd_print , Ptr <mpd_t> -> IO ()
 #ccall mpd_qset_string , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_seterror , Ptr <mpd_t> -> CUInt -> Ptr CUInt -> IO ()
