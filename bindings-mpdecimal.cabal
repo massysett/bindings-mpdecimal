@@ -10,14 +10,16 @@ name:                bindings-mpdecimal
 -- PVP summary:      +-+------- breaking API changes
 --                   | | +----- non-breaking API additions
 --                   | | | +--- code changes with no API change
-version:             0.1.0.0
+version:             0.2.0.0
 
 -- A short (one-line) description of the package.
-synopsis:  bindings to mpdecimal library - correctly rounded
-  arbitrary precision decimal floating point arithmetic
+synopsis:  bindings to mpdecimal library
 
 -- A longer description of the package.
-description:         
+description:
+  mpdecimal provides correctly rounded
+  arbitrary precision decimal floating point arithmetic.
+  .
   Please see
   .
   <http://www.github.com/massysett/bindings-mpdecimal>
@@ -52,6 +54,10 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 extra-source-files: README
+
+source-repository head
+  type: git
+  location: https://github.com/massysett/bindings-mpdecimal.git
   
 library
   default-extensions: ForeignFunctionInterface
