@@ -6,12 +6,55 @@ module Bindings.Mpdecimal where
 import Foreign.Ptr
 #strict_import
 
+-- * Version
 #ccall mpd_version , IO CString
 {- typedef uint64_t mpd_uint_t; -}
 #synonym_t mpd_uint_t , CULong
 {- typedef size_t mpd_size_t; -}
 #synonym_t mpd_size_t , CSize
 {- typedef int64_t mpd_ssize_t; -}
+
+#num MPD_MAJOR_VERSION
+#num MPD_MINOR_VERSION
+#num MPD_MICRO_VERSION
+
+#num MPD_VERSION
+
+-- * Configuration
+
+-- ** Modular and base arithmetic
+#num MPD_UINT_MAX
+#num MPD_BITS_PER_UINT
+#num MPD_SIZE_MAX
+
+-- ** Type for exp, digits, len, prec
+#num MPD_SSIZE_MAX
+#num MPD_SSIZE_MIN
+
+-- ** Decimal arithmetic
+#num MPD_RADIX
+#num MPD_RDIGITS
+#num MPD_MAX_POW10
+#num MPD_EXPDIGITS
+
+#num MPD_MAXTRANSFORM_2N
+#num MPD_MAX_PREC
+#num MPD_MAX_PREC_LOG2
+#num MPD_ELIMIT
+#num MPD_MAX_EMAX
+#num MPD_MIN_EMIN
+#num MPD_MIN_ETINY
+#num MPD_EXP_INF
+#num MPD_EXP_CLAMP
+#num MPD_MAXIMPORT
+
+-- ** Conversion specifiers
+#num PRI_mpd_uint_t
+#num PRI_mpd_ssize_t
+
+
+-- * Context
+
 #synonym_t mpd_ssize_t , CInt
 {- enum {
     MPD_ROUND_UP,
@@ -65,10 +108,56 @@ import Foreign.Ptr
 #field clamp , CInt
 #field allcr , CInt
 #stoptype
+
+-- ** Status flags
+
+#num MPD_Clamped
+#num MPD_Conversion_syntax
+#num MPD_Division_by_zero
+#num MPD_Division_impossible
+#num MPD_Division_undefined
+#num MPD_Fpu_error
+#num MPD_Inexact
+#num MPD_Invalid_context
+#num MPD_Invalid_operation
+#num MPD_Malloc_error
+#num MPD_Not_implemented
+#num MPD_Overflow
+#num MPD_Rounded
+#num MPD_Subnormal
+#num MPD_Underflow
+
+-- ** Conditions that result in an IEEE 754 exception
+#num MPD_IEEE_Invalid_operation
+
+-- ** Errors that require the result of an operation to be set to NaN
+#num MPD_Errors
+
+-- ** Default traps
+#num MPD_Traps
+
+-- ** Official name
+#num MPD_Insufficient_storage
+
+-- ** IEEE 754 interchange format contexts
+#num MPD_IEEE_CONTEXT_MAX_BITS
+#num MPD_DECIMAL32
+#num MPD_DECIMAL64
+#num MPD_DECIMAL128
+
+-- ** minalloc
+
+#num MPD_MINALLOC_MIN
+#num MPD_MINALLOC_MAX
 #globalvar MPD_MINALLOC , CInt
+
+-- ** Traphandler
+
 #globalvar mpd_traphandler , Ptr <mpd_context_t> -> IO ()
 #callback funptr_mpd_traphandler , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_dflt_traphandler , Ptr <mpd_context_t> -> IO ()
+
+-- ** Context functions
 #ccall mpd_setminalloc , CInt -> IO ()
 #ccall mpd_init , Ptr <mpd_context_t> -> CInt -> IO ()
 #ccall mpd_maxcontext , Ptr <mpd_context_t> -> IO ()
@@ -92,6 +181,25 @@ import Foreign.Ptr
 #ccall mpd_qsetclamp , Ptr <mpd_context_t> -> CInt -> IO CInt
 #ccall mpd_qsetcr , Ptr <mpd_context_t> -> CInt -> IO CInt
 #ccall mpd_addstatus_raise , Ptr <mpd_context_t> -> CUInt -> IO ()
+
+-- * Decimal arithmetic
+
+-- ** mpd_t flags
+#num MPD_POS
+#num MPD_NEG
+#num MPD_INF
+#num MPD_NAN
+#num MPD_SNAN
+#num MPD_SPECIAL
+#num MPD_STATIC
+#num MPD_STATIC_DATA
+#num MPD_SHARED_DATA
+#num MPD_CONST_DATA
+#num MPD_DATAFLAGS
+
+
+-- ** mpd_t
+
 {- typedef struct mpd_t {
             uint8_t flags;
             mpd_ssize_t exp;
@@ -110,6 +218,10 @@ import Foreign.Ptr
 #stoptype
 {- typedef unsigned char uchar; -}
 #synonym_t uchar , CUChar
+
+-- * Quiet, thread-safe functions
+
+-- ** Format specification
 {- typedef struct mpd_spec_t {
             mpd_ssize_t min_width;
             mpd_ssize_t prec;
@@ -132,6 +244,8 @@ import Foreign.Ptr
 #field sep , CString
 #field grouping , CString
 #stoptype
+
+-- ** Output to a string
 #ccall mpd_to_sci , Ptr <mpd_t> -> CInt -> IO CString
 #ccall mpd_to_eng , Ptr <mpd_t> -> CInt -> IO CString
 #ccall mpd_to_sci_size , Ptr CString -> Ptr <mpd_t> -> CInt -> IO CInt
@@ -140,27 +254,59 @@ import Foreign.Ptr
 #ccall mpd_parse_fmt_str , Ptr <mpd_spec_t> -> CString -> CInt -> IO CInt
 #ccall mpd_qformat_spec , Ptr <mpd_t> -> Ptr <mpd_spec_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CString
 #ccall mpd_qformat , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CString
+
+#num MPD_NUM_FLAGS
+#num MPD_MAX_FLAG_STRING
+#num MPD_MAX_FLAG_LIST
+#num MPD_MAX_SIGNAL_LIST
+
+
 #ccall mpd_snprint_flags , CString -> CInt -> CUInt -> IO CInt
 #ccall mpd_lsnprint_flags , CString -> CInt -> CUInt -> Ptr CString -> IO CInt
 #ccall mpd_lsnprint_signals , CString -> CInt -> CUInt -> Ptr CString -> IO CInt
+
+-- ** Output to a file
+
 -- next line is removed - prints to a C file object
 -- #ccall mpd_fprint , Ptr <_IO_FILE> -> Ptr <mpd_t> -> IO ()
+
 #ccall mpd_print , Ptr <mpd_t> -> IO ()
+
+
+-- ** Assignment from a string
+
 #ccall mpd_qset_string , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+
+-- ** Set to NaN with error flags
+
 #ccall mpd_seterror , Ptr <mpd_t> -> CUInt -> Ptr CUInt -> IO ()
+
+-- ** Set a special with sign and type
+
 #ccall mpd_setspecial , Ptr <mpd_t> -> CUChar -> CUChar -> IO ()
+
+-- ** Set a coefficient to zero or all nines
 #ccall mpd_zerocoeff , Ptr <mpd_t> -> IO ()
 #ccall mpd_qmaxcoeff , Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+
+-- ** Quietly assign a C integer type to an mpd_t
+
 #ccall mpd_qset_ssize , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qset_i32 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qset_uint , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qset_u32 , Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qset_i64 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qset_u64 , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+
+-- ** Quietly assign a C integer type to an mpd_t with a static coefficient
+
 #ccall mpd_qsset_ssize , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qsset_i32 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qsset_uint , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qsset_u32 , Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+
+-- ** Quietly get a C integer type from an mpd_t
+
 #ccall mpd_qget_ssize , Ptr <mpd_t> -> Ptr CUInt -> IO CInt
 #ccall mpd_qget_uint , Ptr <mpd_t> -> Ptr CUInt -> IO CULong
 #ccall mpd_qabs_uint , Ptr <mpd_t> -> Ptr CUInt -> IO CULong
@@ -168,6 +314,9 @@ import Foreign.Ptr
 #ccall mpd_qget_u32 , Ptr <mpd_t> -> Ptr CUInt -> IO CUInt
 #ccall mpd_qget_i64 , Ptr <mpd_t> -> Ptr CUInt -> IO CInt
 #ccall mpd_qget_u64 , Ptr <mpd_t> -> Ptr CUInt -> IO CULong
+
+-- ** Quiet functions
+
 #ccall mpd_qcheck_nan , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CInt
 #ccall mpd_qcheck_nans , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CInt
 #ccall mpd_qfinalize , Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
@@ -262,6 +411,9 @@ import Foreign.Ptr
 #ccall mpd_qimport_u32 , Ptr <mpd_t> -> Ptr CUInt -> CSize -> CUChar -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qexport_u16 , Ptr (Ptr CUShort) -> CSize -> CUInt -> Ptr <mpd_t> -> Ptr CUInt -> IO CSize
 #ccall mpd_qexport_u32 , Ptr (Ptr CUInt) -> CSize -> CUInt -> Ptr <mpd_t> -> Ptr CUInt -> IO CSize
+
+-- * Signalling functions
+
 #ccall mpd_format , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> IO CString
 #ccall mpd_import_u16 , Ptr <mpd_t> -> Ptr CUShort -> CSize -> CUChar -> CUInt -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_import_u32 , Ptr <mpd_t> -> Ptr CUInt -> CSize -> CUChar -> CUInt -> Ptr <mpd_context_t> -> IO ()
@@ -366,18 +518,34 @@ import Foreign.Ptr
 #ccall mpd_div_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_mul_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_mul_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
+
+-- * Configuration specific
+
+-- FIXME might need to remove these - 64 bits only?
+
 #ccall mpd_qsset_i64 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_qsset_u64 , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
 #ccall mpd_sset_i64 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_sset_u64 , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
+
+-- * Get attributes of a decimal
+
 #ccall mpd_adjexp , Ptr <mpd_t> -> IO CInt
 #ccall mpd_etiny , Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_etop , Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_msword , Ptr <mpd_t> -> IO CULong
 #ccall mpd_word_digits , CULong -> IO CInt
+
+-- | most significant digit of a word
 #ccall mpd_msd , CULong -> IO CULong
+
+-- | least significant digit of a word
 #ccall mpd_lsd , CULong -> IO CULong
+
+-- | coefficient size needed to store digits
 #ccall mpd_digits_to_size , CInt -> IO CInt
+
+-- | number of digits in the exponent, undefined for MPD_SSIZE_MIN
 #ccall mpd_exp_digits , CInt -> IO CInt
 #ccall mpd_iscanonical , Ptr <mpd_t> -> IO CInt
 #ccall mpd_isfinite , Ptr <mpd_t> -> IO CInt
@@ -391,14 +559,28 @@ import Foreign.Ptr
 #ccall mpd_issnan , Ptr <mpd_t> -> IO CInt
 #ccall mpd_isspecial , Ptr <mpd_t> -> IO CInt
 #ccall mpd_iszero , Ptr <mpd_t> -> IO CInt
+
+-- | undefined for special numbers
 #ccall mpd_iszerocoeff , Ptr <mpd_t> -> IO CInt
 #ccall mpd_isnormal , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_issubnormal , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
+
+-- | odd word
 #ccall mpd_isoddword , CULong -> IO CInt
+
+-- | odd coefficient
 #ccall mpd_isoddcoeff , Ptr <mpd_t> -> IO CInt
+
+-- | odd decimal, only defined for integers
 #ccall mpd_isodd , Ptr <mpd_t> -> IO CInt
+
+-- | even decimal, only defined for integers
 #ccall mpd_iseven , Ptr <mpd_t> -> IO CInt
+
+-- | 0 if dec is positive, 1 if dec is negative
 #ccall mpd_sign , Ptr <mpd_t> -> IO CUChar
+
+-- | 1 if dec is positive, -1 if dec is negative
 #ccall mpd_arith_sign , Ptr <mpd_t> -> IO CInt
 #ccall mpd_radix , IO CLong
 #ccall mpd_isdynamic , Ptr <mpd_t> -> IO CInt
@@ -408,8 +590,14 @@ import Foreign.Ptr
 #ccall mpd_isshared_data , Ptr <mpd_t> -> IO CInt
 #ccall mpd_isconst_data , Ptr <mpd_t> -> IO CInt
 #ccall mpd_trail_zeros , Ptr <mpd_t> -> IO CInt
+
+-- * Set attributes of a decimal
+
+-- | set number of decimal digits in the coefficient
 #ccall mpd_setdigits , Ptr <mpd_t> -> IO ()
 #ccall mpd_set_sign , Ptr <mpd_t> -> CUChar -> IO ()
+
+-- | copy sign from another decimal
 #ccall mpd_signcpy , Ptr <mpd_t> -> Ptr <mpd_t> -> IO ()
 #ccall mpd_set_infinity , Ptr <mpd_t> -> IO ()
 #ccall mpd_set_qnan , Ptr <mpd_t> -> IO ()
@@ -425,10 +613,21 @@ import Foreign.Ptr
 #ccall mpd_clear_flags , Ptr <mpd_t> -> IO ()
 #ccall mpd_set_flags , Ptr <mpd_t> -> CUChar -> IO ()
 #ccall mpd_copy_flags , Ptr <mpd_t> -> Ptr <mpd_t> -> IO ()
-#callback mpd_mallocfunc , CSize -> IO (Ptr ())
-#callback mpd_callocfunc , CSize -> CSize -> IO (Ptr ())
-#callback mpd_reallocfunc , Ptr () -> CSize -> IO (Ptr ())
-#callback mpd_free , Ptr () -> IO ()
+
+-- * Memory handling
+
+#globalvar mpd_mallocfunc , CSize -> IO (Ptr ())
+#callback funptr_mpd_mallocfunc , CSize -> IO (Ptr ())
+
+#globalvar mpd_callocfunc , CSize -> CSize -> IO (Ptr ())
+#callback funptr_mpd_callocfunc , CSize -> CSize -> IO (Ptr ())
+
+#globalvar mpd_reallocfunc , Ptr () -> CSize -> IO (Ptr ())
+#callback funptr_mpd_reallocfunc , Ptr () -> CSize -> IO (Ptr ())
+
+#globalvar mpd_free , Ptr () -> IO ()
+#callback funptr_mpd_free , Ptr () -> IO ()
+
 #ccall mpd_callocfunc_em , CSize -> CSize -> IO (Ptr ())
 #ccall mpd_alloc , CSize -> CSize -> IO (Ptr ())
 #ccall mpd_calloc , CSize -> CSize -> IO (Ptr ())
