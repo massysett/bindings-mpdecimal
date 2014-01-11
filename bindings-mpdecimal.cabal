@@ -54,11 +54,12 @@ cabal-version:       >=1.10
 extra-source-files: README
   
 library
+  default-extensions: ForeignFunctionInterface
   hs-source-dirs: lib
 
   -- Modules exported by the library.
   exposed-modules:     
-      Numeric.Mpdecimal
+      Bindings.Mpdecimal
   
   -- Modules included in this library but not exported.
   -- other-modules:       
@@ -67,7 +68,9 @@ library
   -- other-extensions:    
   
   -- Other library packages from which modules are imported.
-  build-depends:       base >=4.6 && <4.7
+  build-depends:
+      base >=4.6 && <4.7
+    , bindings-DSL ==1.0.*
   
   -- Directories containing source files.
   -- hs-source-dirs:      
