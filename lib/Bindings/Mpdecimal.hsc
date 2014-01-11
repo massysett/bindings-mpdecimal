@@ -66,7 +66,8 @@ import Foreign.Ptr
 #field allcr , CInt
 #stoptype
 #globalvar MPD_MINALLOC , CInt
-#callback mpd_traphandler , Ptr <mpd_context_t> -> IO ()
+#globalvar mpd_traphandler , Ptr <mpd_context_t> -> IO ()
+#callback funptr_mpd_traphandler , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_dflt_traphandler , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_setminalloc , CInt -> IO ()
 #ccall mpd_init , Ptr <mpd_context_t> -> CInt -> IO ()
