@@ -8,17 +8,18 @@ import Foreign.Ptr
 
 -- * Version
 #ccall mpd_version , IO CString
-{- typedef uint64_t mpd_uint_t; -}
-#synonym_t mpd_uint_t , CULong
-{- typedef size_t mpd_size_t; -}
-#synonym_t mpd_size_t , CSize
-{- typedef int64_t mpd_ssize_t; -}
 
 #num MPD_MAJOR_VERSION
 #num MPD_MINOR_VERSION
 #num MPD_MICRO_VERSION
 
 #num MPD_VERSION
+
+-- * Sizes and integral types
+#integral_t mpd_uint_t
+#integral_t mpd_size_t
+#integral_t mpd_ssize_t
+#integral_t uint32_t
 
 -- * Configuration
 
@@ -55,7 +56,6 @@ import Foreign.Ptr
 
 -- * Context
 
-#synonym_t mpd_ssize_t , CInt
 {- enum {
     MPD_ROUND_UP,
     MPD_ROUND_DOWN,
@@ -217,7 +217,7 @@ import Foreign.Ptr
 #field data , Ptr CULong
 #stoptype
 {- typedef unsigned char uchar; -}
-#synonym_t uchar , CUChar
+#integral_t uchar
 
 -- * Quiet, thread-safe functions
 
