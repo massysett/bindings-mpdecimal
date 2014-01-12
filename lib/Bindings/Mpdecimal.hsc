@@ -153,8 +153,8 @@ import Foreign.Ptr
 
 -- ** Traphandler
 
-#globalvar mpd_traphandler , Ptr <mpd_context_t> -> IO ()
 #callback funptr_mpd_traphandler , Ptr <mpd_context_t> -> IO ()
+#globalvar mpd_traphandler , funptr_mpd_traphandler
 #ccall mpd_dflt_traphandler , Ptr <mpd_context_t> -> IO ()
 
 -- ** Context functions
