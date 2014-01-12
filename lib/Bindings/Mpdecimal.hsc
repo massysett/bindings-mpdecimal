@@ -22,6 +22,8 @@ import Foreign.Ptr
 #integral_t uint32_t
 #integral_t size_t
 #integral_t uint8_t
+#integral_t int32_t
+#integral_t uint64_t
 
 -- * Configuration
 
@@ -252,12 +254,12 @@ foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
 -- ** Output to a string
 #ccall mpd_to_sci , Ptr <mpd_t> -> CInt -> IO CString
 #ccall mpd_to_eng , Ptr <mpd_t> -> CInt -> IO CString
-#ccall mpd_to_sci_size , Ptr CString -> Ptr <mpd_t> -> CInt -> IO CInt
-#ccall mpd_to_eng_size , Ptr CString -> Ptr <mpd_t> -> CInt -> IO CInt
+#ccall mpd_to_sci_size , Ptr CString -> Ptr <mpd_t> -> CInt -> IO <mpd_ssize_t>
+#ccall mpd_to_eng_size , Ptr CString -> Ptr <mpd_t> -> CInt -> IO <mpd_ssize_t>
 #ccall mpd_validate_lconv , Ptr <mpd_spec_t> -> IO CInt
 #ccall mpd_parse_fmt_str , Ptr <mpd_spec_t> -> CString -> CInt -> IO CInt
-#ccall mpd_qformat_spec , Ptr <mpd_t> -> Ptr <mpd_spec_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CString
-#ccall mpd_qformat , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CString
+#ccall mpd_qformat_spec , Ptr <mpd_t> -> Ptr <mpd_spec_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO CString
+#ccall mpd_qformat , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO CString
 
 #num MPD_NUM_FLAGS
 #num MPD_MAX_FLAG_STRING
@@ -265,9 +267,9 @@ foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
 #num MPD_MAX_SIGNAL_LIST
 
 
-#ccall mpd_snprint_flags , CString -> CInt -> CUInt -> IO CInt
-#ccall mpd_lsnprint_flags , CString -> CInt -> CUInt -> Ptr CString -> IO CInt
-#ccall mpd_lsnprint_signals , CString -> CInt -> CUInt -> Ptr CString -> IO CInt
+#ccall mpd_snprint_flags , CString -> CInt -> <uint32_t> -> IO CInt
+#ccall mpd_lsnprint_flags , CString -> CInt -> <uint32_t> -> Ptr CString -> IO CInt
+#ccall mpd_lsnprint_signals , CString -> CInt -> <uint32_t> -> Ptr CString -> IO CInt
 
 -- ** Output to a file
 
@@ -279,28 +281,28 @@ foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
 
 -- ** Assignment from a string
 
-#ccall mpd_qset_string , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+#ccall mpd_qset_string , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 
 -- ** Set to NaN with error flags
 
-#ccall mpd_seterror , Ptr <mpd_t> -> CUInt -> Ptr CUInt -> IO ()
+#ccall mpd_seterror , Ptr <mpd_t> -> <uint32_t> -> Ptr <uint32_t> -> IO ()
 
 -- ** Set a special with sign and type
 
-#ccall mpd_setspecial , Ptr <mpd_t> -> CUChar -> CUChar -> IO ()
+#ccall mpd_setspecial , Ptr <mpd_t> -> <uint8_t> -> <uint8_t> -> IO ()
 
 -- ** Set a coefficient to zero or all nines
 #ccall mpd_zerocoeff , Ptr <mpd_t> -> IO ()
-#ccall mpd_qmaxcoeff , Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+#ccall mpd_qmaxcoeff , Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 
 -- ** Quietly assign a C integer type to an mpd_t
 
-#ccall mpd_qset_ssize , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qset_i32 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qset_uint , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qset_u32 , Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qset_i64 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qset_u64 , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+#ccall mpd_qset_ssize , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qset_i32 , Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qset_uint , Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qset_u32 , Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qset_i64 , Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qset_u64 , Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 
 -- ** Quietly assign a C integer type to an mpd_t with a static coefficient
 
