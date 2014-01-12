@@ -20,6 +20,8 @@ import Foreign.Ptr
 #integral_t mpd_size_t
 #integral_t mpd_ssize_t
 #integral_t uint32_t
+#integral_t size_t
+#integral_t uint8_t
 
 -- * Configuration
 
@@ -154,8 +156,10 @@ import Foreign.Ptr
 -- ** Traphandler
 
 #callback funptr_mpd_traphandler , Ptr <mpd_context_t> -> IO ()
-#globalvar mpd_traphandler , funptr_mpd_traphandler
 #ccall mpd_dflt_traphandler , Ptr <mpd_context_t> -> IO ()
+
+foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
+  :: Ptr (FunPtr (Ptr C'mpd_context_t -> IO ()))
 
 -- ** Context functions
 #ccall mpd_setminalloc , CInt -> IO ()
@@ -164,20 +168,20 @@ import Foreign.Ptr
 #ccall mpd_defaultcontext , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_basiccontext , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_ieee_context , Ptr <mpd_context_t> -> CInt -> IO CInt
-#ccall mpd_getprec , Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_getemax , Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_getemin , Ptr <mpd_context_t> -> IO CInt
+#ccall mpd_getprec , Ptr <mpd_context_t> -> IO <mpd_ssize_t>
+#ccall mpd_getemax , Ptr <mpd_context_t> -> IO <mpd_ssize_t>
+#ccall mpd_getemin , Ptr <mpd_context_t> -> IO <mpd_ssize_t>
 #ccall mpd_getround , Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_gettraps , Ptr <mpd_context_t> -> IO CUInt
-#ccall mpd_getstatus , Ptr <mpd_context_t> -> IO CUInt
+#ccall mpd_gettraps , Ptr <mpd_context_t> -> IO <uint32_t>
+#ccall mpd_getstatus , Ptr <mpd_context_t> -> IO <uint32_t>
 #ccall mpd_getclamp , Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_getcr , Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_qsetprec , Ptr <mpd_context_t> -> CInt -> IO CInt
-#ccall mpd_qsetemax , Ptr <mpd_context_t> -> CInt -> IO CInt
-#ccall mpd_qsetemin , Ptr <mpd_context_t> -> CInt -> IO CInt
+#ccall mpd_qsetprec , Ptr <mpd_context_t> -> <mpd_ssize_t> -> IO CInt
+#ccall mpd_qsetemax , Ptr <mpd_context_t> -> <mpd_ssize_t> -> IO CInt
+#ccall mpd_qsetemin , Ptr <mpd_context_t> -> <mpd_ssize_t> -> IO CInt
 #ccall mpd_qsetround , Ptr <mpd_context_t> -> CInt -> IO CInt
-#ccall mpd_qsettraps , Ptr <mpd_context_t> -> CUInt -> IO CInt
-#ccall mpd_qsetstatus , Ptr <mpd_context_t> -> CUInt -> IO CInt
+#ccall mpd_qsettraps , Ptr <mpd_context_t> -> <uint32_t> -> IO CInt
+#ccall mpd_qsetstatus , Ptr <mpd_context_t> -> <uint32_t> -> IO CInt
 #ccall mpd_qsetclamp , Ptr <mpd_context_t> -> CInt -> IO CInt
 #ccall mpd_qsetcr , Ptr <mpd_context_t> -> CInt -> IO CInt
 #ccall mpd_addstatus_raise , Ptr <mpd_context_t> -> CUInt -> IO ()
@@ -209,12 +213,12 @@ import Foreign.Ptr
             mpd_uint_t * data;
         } mpd_t; -}
 #starttype mpd_t
-#field flags , CUChar
-#field exp , CInt
-#field digits , CInt
-#field len , CInt
-#field alloc , CInt
-#field data , Ptr CULong
+#field flags , <uint8_t>
+#field exp , <mpd_ssize_t>
+#field digits , <mpd_ssize_t>
+#field len , <mpd_ssize_t>
+#field alloc , <mpd_ssize_t>
+#field data , Ptr <mpd_uint_t>
 #stoptype
 {- typedef unsigned char uchar; -}
 #integral_t uchar
@@ -531,8 +535,8 @@ import Foreign.Ptr
 -- * Get attributes of a decimal
 
 #ccall mpd_adjexp , Ptr <mpd_t> -> IO CInt
-#ccall mpd_etiny , Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_etop , Ptr <mpd_context_t> -> IO CInt
+#ccall mpd_etiny , Ptr <mpd_context_t> -> IO <mpd_ssize_t>
+#ccall mpd_etop , Ptr <mpd_context_t> -> IO <mpd_ssize_t>
 #ccall mpd_msword , Ptr <mpd_t> -> IO CULong
 #ccall mpd_word_digits , CULong -> IO CInt
 
