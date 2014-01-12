@@ -1,3 +1,6 @@
+WARNING - this is a work in progress.  Do not use it yet.  I am checking the
+types, which will take time.
+
 Bindings to the mpdecimal library by Stefan Krah, which is available at
 
 http://www.bytereef.org/mpdecimal
