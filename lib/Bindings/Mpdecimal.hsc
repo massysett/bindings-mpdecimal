@@ -24,6 +24,7 @@ import Foreign.Ptr
 #integral_t uint8_t
 #integral_t int32_t
 #integral_t uint64_t
+#integral_t int64_t
 
 -- * Configuration
 
@@ -157,7 +158,7 @@ import Foreign.Ptr
 
 -- ** Traphandler
 
-#callback funptr_mpd_traphandler , Ptr <mpd_context_t> -> IO ()
+#callback_t funptr_mpd_traphandler , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_dflt_traphandler , Ptr <mpd_context_t> -> IO ()
 
 foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
@@ -301,7 +302,7 @@ foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
 #ccall mpd_qset_i32 , Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 #ccall mpd_qset_uint , Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 #ccall mpd_qset_u32 , Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
-#ccall mpd_qset_i64 , Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qset_i64 , Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 #ccall mpd_qset_u64 , Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 
 -- ** Quietly assign a C integer type to an mpd_t with a static coefficient
