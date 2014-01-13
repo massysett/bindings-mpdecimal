@@ -103,12 +103,12 @@ import Foreign.Ptr
             int allcr;
         } mpd_context_t; -}
 #starttype mpd_context_t
-#field prec , CInt
-#field emax , CInt
-#field emin , CInt
-#field traps , CUInt
-#field status , CUInt
-#field newtrap , CUInt
+#field prec , <mpd_ssize_t>
+#field emax , <mpd_ssize_t>
+#field emin , <mpd_ssize_t>
+#field traps , <uint32_t>
+#field status , <uint32_t>
+#field newtrap , <uint32_t>
 #field round , CInt
 #field clamp , CInt
 #field allcr , CInt
@@ -160,13 +160,11 @@ import Foreign.Ptr
 
 #callback_t funptr_mpd_traphandler , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_dflt_traphandler , Ptr <mpd_context_t> -> IO ()
-
-foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
-  :: Ptr (FunPtr (Ptr C'mpd_context_t -> IO ()))
+#globalvar mpd_traphandler , <funptr_mpd_traphandler>
 
 -- ** Context functions
-#ccall mpd_setminalloc , CInt -> IO ()
-#ccall mpd_init , Ptr <mpd_context_t> -> CInt -> IO ()
+#ccall mpd_setminalloc , <mpd_ssize_t> -> IO ()
+#ccall mpd_init , Ptr <mpd_context_t> -> <mpd_ssize_t> -> IO ()
 #ccall mpd_maxcontext , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_defaultcontext , Ptr <mpd_context_t> -> IO ()
 #ccall mpd_basiccontext , Ptr <mpd_context_t> -> IO ()
@@ -187,7 +185,7 @@ foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
 #ccall mpd_qsetstatus , Ptr <mpd_context_t> -> <uint32_t> -> IO CInt
 #ccall mpd_qsetclamp , Ptr <mpd_context_t> -> CInt -> IO CInt
 #ccall mpd_qsetcr , Ptr <mpd_context_t> -> CInt -> IO CInt
-#ccall mpd_addstatus_raise , Ptr <mpd_context_t> -> CUInt -> IO ()
+#ccall mpd_addstatus_raise , Ptr <mpd_context_t> -> <uint32_t> -> IO ()
 
 -- * Decimal arithmetic
 
@@ -241,8 +239,8 @@ foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
             const char * grouping;
         } mpd_spec_t; -}
 #starttype mpd_spec_t
-#field min_width , CInt
-#field prec , CInt
+#field min_width , <mpd_ssize_t>
+#field prec , <mpd_ssize_t>
 #field type , CChar
 #field align , CChar
 #field sign , CChar
@@ -274,9 +272,7 @@ foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
 
 -- ** Output to a file
 
--- next line is removed - prints to a C file object
--- #ccall mpd_fprint , Ptr <_IO_FILE> -> Ptr <mpd_t> -> IO ()
-
+#ccall mpd_fprint , Ptr CFile -> Ptr <mpd_t> -> IO ()
 #ccall mpd_print , Ptr <mpd_t> -> IO ()
 
 
@@ -293,6 +289,7 @@ foreign import ccall "mpdecimal.h &mpd_traphandler" g'mpd_traphandler
 #ccall mpd_setspecial , Ptr <mpd_t> -> <uint8_t> -> <uint8_t> -> IO ()
 
 -- ** Set a coefficient to zero or all nines
+
 #ccall mpd_zerocoeff , Ptr <mpd_t> -> IO ()
 #ccall mpd_qmaxcoeff , Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 
