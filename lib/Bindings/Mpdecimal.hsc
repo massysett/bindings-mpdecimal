@@ -11,6 +11,7 @@ import Foreign.Ptr
 #num MPD_MAJOR_VERSION
 #num MPD_MINOR_VERSION
 #num MPD_MICRO_VERSION
+#num NULL
 
 #num MPD_VERSION
 
@@ -21,6 +22,7 @@ import Foreign.Ptr
 #integral_t uint32_t
 #integral_t size_t
 #integral_t uint8_t
+#integral_t uint16_t
 #integral_t int32_t
 #integral_t uint64_t
 #integral_t int64_t
@@ -257,9 +259,6 @@ import Foreign.Ptr
 #ccall mpd_to_eng , Ptr <mpd_t> -> CInt -> IO CString
 #ccall mpd_to_sci_size , Ptr CString -> Ptr <mpd_t> -> CInt -> IO <mpd_ssize_t>
 #ccall mpd_to_eng_size , Ptr CString -> Ptr <mpd_t> -> CInt -> IO <mpd_ssize_t>
-#ccall mpd_validate_lconv , Ptr <mpd_spec_t> -> IO CInt
-#ccall mpd_parse_fmt_str , Ptr <mpd_spec_t> -> CString -> CInt -> IO CInt
-#ccall mpd_qformat_spec , Ptr <mpd_t> -> Ptr <mpd_spec_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO CString
 #ccall mpd_qformat , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO CString
 
 #num MPD_NUM_FLAGS
@@ -306,147 +305,147 @@ import Foreign.Ptr
 
 --  Quietly assign a C integer type to an mpd_t with a static coefficient
 
-#ccall mpd_qsset_ssize , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsset_i32 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsset_uint , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsset_u32 , Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+#ccall mpd_qsset_ssize , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsset_i32 , Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsset_uint , Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsset_u32 , Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 
 --  Quietly get a C integer type from an mpd_t
 
-#ccall mpd_qget_ssize , Ptr <mpd_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qget_uint , Ptr <mpd_t> -> Ptr CUInt -> IO CULong
-#ccall mpd_qabs_uint , Ptr <mpd_t> -> Ptr CUInt -> IO CULong
-#ccall mpd_qget_i32 , Ptr <mpd_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qget_u32 , Ptr <mpd_t> -> Ptr CUInt -> IO CUInt
-#ccall mpd_qget_i64 , Ptr <mpd_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qget_u64 , Ptr <mpd_t> -> Ptr CUInt -> IO CULong
+#ccall mpd_qget_ssize , Ptr <mpd_t> -> Ptr <uint32_t> -> IO <mpd_ssize_t>
+#ccall mpd_qget_uint , Ptr <mpd_t> -> Ptr <uint32_t> -> IO <mpd_uint_t>
+#ccall mpd_qabs_uint , Ptr <mpd_t> -> Ptr <uint32_t> -> IO <mpd_uint_t>
+#ccall mpd_qget_i32 , Ptr <mpd_t> -> Ptr <uint32_t> -> IO <int32_t>
+#ccall mpd_qget_u32 , Ptr <mpd_t> -> Ptr <uint32_t> -> IO <uint32_t>
+#ccall mpd_qget_i64 , Ptr <mpd_t> -> Ptr <uint32_t> -> IO <int64_t>
+#ccall mpd_qget_u64 , Ptr <mpd_t> -> Ptr <uint32_t> -> IO <uint64_t>
 
 --  Quiet functions
 
-#ccall mpd_qcheck_nan , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qcheck_nans , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qfinalize , Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+#ccall mpd_qcheck_nan , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO CInt
+#ccall mpd_qcheck_nans , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO CInt
+#ccall mpd_qfinalize , Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 #ccall mpd_class , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CString
-#ccall mpd_qcopy , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr CUInt -> IO CInt
+#ccall mpd_qcopy , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <uint32_t> -> IO CInt
 #ccall mpd_qncopy , Ptr <mpd_t> -> IO (Ptr <mpd_t>)
-#ccall mpd_qcopy_abs , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qcopy_negate , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qcopy_sign , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qand , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qinvert , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qlogb , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qor , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qscaleb , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qxor , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
+#ccall mpd_qcopy_abs , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <uint32_t> -> IO CInt
+#ccall mpd_qcopy_negate , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <uint32_t> -> IO <uint32_t>
+#ccall mpd_qcopy_sign , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <uint32_t> -> IO CInt
+#ccall mpd_qand , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qinvert , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qlogb , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qor , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qscaleb , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qxor , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
 #ccall mpd_same_quantum , Ptr <mpd_t> -> Ptr <mpd_t> -> IO CInt
-#ccall mpd_qrotate , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qshiftl , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr CUInt -> IO CInt
-#ccall mpd_qshiftr , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr CUInt -> IO CULong
-#ccall mpd_qshiftr_inplace , Ptr <mpd_t> -> CInt -> IO CULong
-#ccall mpd_qshift , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qshiftn , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qcmp , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qcompare , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CInt
-#ccall mpd_qcompare_signal , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO CInt
+#ccall mpd_qrotate , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qshiftl , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO CInt
+#ccall mpd_qshiftr , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <uint32_t> -> IO <mpd_uint_t>
+#ccall mpd_qshiftr_inplace , Ptr <mpd_t> -> <mpd_ssize_t> -> IO <mpd_uint_t>
+#ccall mpd_qshift , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qshiftn , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qcmp , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <uint32_t> -> IO CInt
+#ccall mpd_qcompare , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO CInt
+#ccall mpd_qcompare_signal , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO CInt
 #ccall mpd_cmp_total , Ptr <mpd_t> -> Ptr <mpd_t> -> IO CInt
 #ccall mpd_cmp_total_mag , Ptr <mpd_t> -> Ptr <mpd_t> -> IO CInt
 #ccall mpd_compare_total , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> IO CInt
 #ccall mpd_compare_total_mag , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> IO CInt
-#ccall mpd_qround_to_intx , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qround_to_int , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qtrunc , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qfloor , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qceil , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qabs , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmax , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmax_mag , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmin , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmin_mag , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qminus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qplus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qnext_minus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qnext_plus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qnext_toward , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qquantize , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qrescale , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qrescale_fmt , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qreduce , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qadd , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qadd_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qadd_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qadd_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qadd_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsub , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsub_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsub_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsub_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsub_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmul , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmul_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmul_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmul_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmul_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qfma , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdiv , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdiv_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdiv_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdiv_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdiv_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdivint , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qrem , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qrem_near , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdivmod , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qpow , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qpowmod , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qexp , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qln10 , Ptr <mpd_t> -> CInt -> Ptr CUInt -> IO ()
-#ccall mpd_qln , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qlog10 , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsqrt , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qinvroot , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qadd_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qadd_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsub_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsub_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmul_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qmul_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdiv_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qdiv_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_sizeinbase , Ptr <mpd_t> -> CUInt -> IO CSize
-#ccall mpd_qimport_u16 , Ptr <mpd_t> -> Ptr CUShort -> CSize -> CUChar -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qimport_u32 , Ptr <mpd_t> -> Ptr CUInt -> CSize -> CUChar -> CUInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qexport_u16 , Ptr (Ptr CUShort) -> CSize -> CUInt -> Ptr <mpd_t> -> Ptr CUInt -> IO CSize
-#ccall mpd_qexport_u32 , Ptr (Ptr CUInt) -> CSize -> CUInt -> Ptr <mpd_t> -> Ptr CUInt -> IO CSize
+#ccall mpd_qround_to_intx , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qround_to_int , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qtrunc , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qfloor , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qceil , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qabs , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmax , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmax_mag , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmin , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmin_mag , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qminus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qplus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qnext_minus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qnext_plus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qnext_toward , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qquantize , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qrescale , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qrescale_fmt , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qreduce , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qadd , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qadd_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qadd_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qadd_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qadd_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsub , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsub_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsub_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsub_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsub_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmul , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmul_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmul_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmul_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmul_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qfma , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdiv , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdiv_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdiv_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdiv_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdiv_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdivint , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qrem , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qrem_near , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdivmod , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qpow , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qpowmod , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qexp , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qln10 , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qln , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qlog10 , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsqrt , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qinvroot , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qadd_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qadd_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsub_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qsub_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmul_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qmul_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdiv_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qdiv_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_sizeinbase , Ptr <mpd_t> -> <uint32_t> -> IO <size_t>
+#ccall mpd_qimport_u16 , Ptr <mpd_t> -> Ptr <uint16_t> -> <size_t> -> <uint8_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qimport_u32 , Ptr <mpd_t> -> Ptr <uint32_t> -> <size_t> -> <uint8_t> -> <uint32_t> -> Ptr <mpd_context_t> -> Ptr <uint32_t> -> IO ()
+#ccall mpd_qexport_u16 , Ptr (Ptr CUShort) -> <size_t> -> <uint32_t> -> Ptr <mpd_t> -> Ptr <uint32_t> -> IO <size_t>
+#ccall mpd_qexport_u32 , Ptr (Ptr <uint32_t>) -> <size_t> -> <uint32_t> -> Ptr <mpd_t> -> Ptr <uint32_t> -> IO <size_t>
 
 --  Signalling functions
 
 #ccall mpd_format , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> IO CString
-#ccall mpd_import_u16 , Ptr <mpd_t> -> Ptr CUShort -> CSize -> CUChar -> CUInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_import_u32 , Ptr <mpd_t> -> Ptr CUInt -> CSize -> CUChar -> CUInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_export_u16 , Ptr (Ptr CUShort) -> CSize -> CUInt -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CSize
-#ccall mpd_export_u32 , Ptr (Ptr CUInt) -> CSize -> CUInt -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CSize
+#ccall mpd_import_u16 , Ptr <mpd_t> -> Ptr CUShort -> CSize -> CUChar -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_import_u32 , Ptr <mpd_t> -> Ptr <uint32_t> -> CSize -> CUChar -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_export_u16 , Ptr (Ptr CUShort) -> CSize -> <uint32_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CSize
+#ccall mpd_export_u32 , Ptr (Ptr <uint32_t>) -> CSize -> <uint32_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CSize
 #ccall mpd_finalize , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_check_nan , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_check_nans , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_set_string , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_maxcoeff , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sset_ssize , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sset_i32 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sset_uint , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sset_u32 , Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_set_ssize , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_set_i32 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_set_uint , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_set_u32 , Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_set_i64 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_set_u64 , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_get_ssize , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_get_uint , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CULong
-#ccall mpd_abs_uint , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CULong
-#ccall mpd_get_i32 , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_get_u32 , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CUInt
-#ccall mpd_get_i64 , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_get_u64 , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CULong
+#ccall mpd_sset_ssize , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sset_i32 , Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sset_uint , Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sset_u32 , Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_set_ssize , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_set_i32 , Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_set_uint , Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_set_u32 , Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_set_i64 , Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_set_u64 , Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_get_ssize , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <mpd_ssize_t>
+#ccall mpd_get_uint , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <mpd_uint_t>
+#ccall mpd_abs_uint , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <mpd_uint_t>
+#ccall mpd_get_i32 , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <int32_t>
+#ccall mpd_get_u32 , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <uint32_t>
+#ccall mpd_get_i64 , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <int64_t>
+#ccall mpd_get_u64 , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <uint64_t>
 #ccall mpd_and , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_copy , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_canonical , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
@@ -458,9 +457,9 @@ import Foreign.Ptr
 #ccall mpd_or , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_rotate , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_scaleb , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_shiftl , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_shiftr , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO CULong
-#ccall mpd_shiftn , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_shiftl , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_shiftr , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO <mpd_uint_t>
+#ccall mpd_shiftn , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_shift , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_xor , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_abs , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
@@ -468,20 +467,20 @@ import Foreign.Ptr
 #ccall mpd_compare , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_compare_signal , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_add , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_add_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_add_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_add_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_add_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_add_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_add_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_add_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_add_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_sub , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sub_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sub_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sub_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sub_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sub_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sub_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sub_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sub_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_div , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_div_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_div_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_div_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_div_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_div_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_div_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_div_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_div_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_divmod , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_divint , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_exp , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
@@ -494,10 +493,10 @@ import Foreign.Ptr
 #ccall mpd_min_mag , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_minus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_mul , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_mul_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_mul_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_mul_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_mul_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> CUInt -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_mul_ssize , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_mul_i32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_mul_uint , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_uint_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_mul_u32 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_next_minus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_next_plus , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_next_toward , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
@@ -505,7 +504,7 @@ import Foreign.Ptr
 #ccall mpd_pow , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_powmod , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_quantize , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_rescale , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_rescale , Ptr <mpd_t> -> Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_reduce , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_rem , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_rem_near , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
@@ -516,39 +515,30 @@ import Foreign.Ptr
 #ccall mpd_ceil , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_sqrt , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_invroot , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_add_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_add_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sub_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sub_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_div_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_div_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_mul_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_mul_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
-
---  Configuration specific
-
--- FIXME might need to remove these - 64 bits only?
-
-#ccall mpd_qsset_i64 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_qsset_u64 , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> Ptr CUInt -> IO ()
-#ccall mpd_sset_i64 , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_sset_u64 , Ptr <mpd_t> -> CULong -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_add_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_add_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sub_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_sub_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_div_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_div_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_mul_i64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <int64_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_mul_u64 , Ptr <mpd_t> -> Ptr <mpd_t> -> <uint64_t> -> Ptr <mpd_context_t> -> IO ()
 
 --  Get attributes of a decimal
 
 #ccall mpd_adjexp , Ptr <mpd_t> -> IO CInt
 #ccall mpd_etiny , Ptr <mpd_context_t> -> IO <mpd_ssize_t>
 #ccall mpd_etop , Ptr <mpd_context_t> -> IO <mpd_ssize_t>
-#ccall mpd_msword , Ptr <mpd_t> -> IO CULong
-#ccall mpd_word_digits , CULong -> IO CInt
+#ccall mpd_msword , Ptr <mpd_t> -> IO <mpd_uint_t>
+#ccall mpd_word_digits , <mpd_uint_t> -> IO CInt
 
-#ccall mpd_msd , CULong -> IO CULong
+#ccall mpd_msd , <mpd_uint_t> -> IO <mpd_uint_t>
 
-#ccall mpd_lsd , CULong -> IO CULong
+#ccall mpd_lsd , <mpd_uint_t> -> IO <mpd_uint_t>
 
 #ccall mpd_digits_to_size , CInt -> IO CInt
 
-#ccall mpd_exp_digits , CInt -> IO CInt
+#ccall mpd_exp_digits , <mpd_ssize_t> -> IO CInt
 #ccall mpd_iscanonical , Ptr <mpd_t> -> IO CInt
 #ccall mpd_isfinite , Ptr <mpd_t> -> IO CInt
 #ccall mpd_isinfinite , Ptr <mpd_t> -> IO CInt
@@ -566,7 +556,7 @@ import Foreign.Ptr
 #ccall mpd_isnormal , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_issubnormal , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
 
-#ccall mpd_isoddword , CULong -> IO CInt
+#ccall mpd_isoddword , <mpd_uint_t> -> IO CInt
 
 #ccall mpd_isoddcoeff , Ptr <mpd_t> -> IO CInt
 
@@ -630,9 +620,9 @@ import Foreign.Ptr
 #ccall mpd_new , Ptr <mpd_context_t> -> IO (Ptr <mpd_t>)
 #ccall mpd_qnew_size , CInt -> IO (Ptr <mpd_t>)
 #ccall mpd_del , Ptr <mpd_t> -> IO ()
-#ccall mpd_uint_zero , Ptr CULong -> CSize -> IO ()
-#ccall mpd_qresize , Ptr <mpd_t> -> CInt -> Ptr CUInt -> IO CInt
-#ccall mpd_qresize_zero , Ptr <mpd_t> -> CInt -> Ptr CUInt -> IO CInt
+#ccall mpd_uint_zero , Ptr <mpd_uint_t> -> <mpd_size_t> -> IO ()
+#ccall mpd_qresize , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <uint32_t> -> IO CInt
+#ccall mpd_qresize_zero , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <uint32_t> -> IO CInt
 #ccall mpd_minalloc , Ptr <mpd_t> -> IO ()
 #ccall mpd_resize , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_resize_zero , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO CInt
