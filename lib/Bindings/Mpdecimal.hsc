@@ -420,10 +420,10 @@ import Foreign.Ptr
 --  Signalling functions
 
 #ccall mpd_format , Ptr <mpd_t> -> CString -> Ptr <mpd_context_t> -> IO CString
-#ccall mpd_import_u16 , Ptr <mpd_t> -> Ptr CUShort -> CSize -> CUChar -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_import_u32 , Ptr <mpd_t> -> Ptr <uint32_t> -> CSize -> CUChar -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
-#ccall mpd_export_u16 , Ptr (Ptr CUShort) -> CSize -> <uint32_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CSize
-#ccall mpd_export_u32 , Ptr (Ptr <uint32_t>) -> CSize -> <uint32_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CSize
+#ccall mpd_import_u16 , Ptr <mpd_t> -> Ptr CUShort -> <size_t> -> CUChar -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_import_u32 , Ptr <mpd_t> -> Ptr <uint32_t> -> <size_t> -> CUChar -> <uint32_t> -> Ptr <mpd_context_t> -> IO ()
+#ccall mpd_export_u16 , Ptr (Ptr CUShort) -> <size_t> -> <uint32_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <size_t>
+#ccall mpd_export_u32 , Ptr (Ptr <uint32_t>) -> <size_t> -> <uint32_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO <size_t>
 #ccall mpd_finalize , Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO ()
 #ccall mpd_check_nan , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
 #ccall mpd_check_nans , Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_t> -> Ptr <mpd_context_t> -> IO CInt
@@ -579,7 +579,7 @@ import Foreign.Ptr
 --  Set attributes of a decimal
 
 #ccall mpd_setdigits , Ptr <mpd_t> -> IO ()
-#ccall mpd_set_sign , Ptr <mpd_t> -> CUChar -> IO ()
+#ccall mpd_set_sign , Ptr <mpd_t> -> <uint8_t> -> IO ()
 
 #ccall mpd_signcpy , Ptr <mpd_t> -> Ptr <mpd_t> -> IO ()
 #ccall mpd_set_infinity , Ptr <mpd_t> -> IO ()
@@ -594,35 +594,12 @@ import Foreign.Ptr
 #ccall mpd_set_shared_data , Ptr <mpd_t> -> IO ()
 #ccall mpd_set_const_data , Ptr <mpd_t> -> IO ()
 #ccall mpd_clear_flags , Ptr <mpd_t> -> IO ()
-#ccall mpd_set_flags , Ptr <mpd_t> -> CUChar -> IO ()
+#ccall mpd_set_flags , Ptr <mpd_t> -> <uint8_t> -> IO ()
 #ccall mpd_copy_flags , Ptr <mpd_t> -> Ptr <mpd_t> -> IO ()
 
---  Memory handling
+-- Memory handling
+-- I skipped many functions.
 
-#globalvar mpd_mallocfunc , CSize -> IO (Ptr ())
-#callback funptr_mpd_mallocfunc , CSize -> IO (Ptr ())
-
-#globalvar mpd_callocfunc , CSize -> CSize -> IO (Ptr ())
-#callback funptr_mpd_callocfunc , CSize -> CSize -> IO (Ptr ())
-
-#globalvar mpd_reallocfunc , Ptr () -> CSize -> IO (Ptr ())
-#callback funptr_mpd_reallocfunc , Ptr () -> CSize -> IO (Ptr ())
-
-#globalvar mpd_free , Ptr () -> IO ()
-#callback funptr_mpd_free , Ptr () -> IO ()
-
-#ccall mpd_callocfunc_em , CSize -> CSize -> IO (Ptr ())
-#ccall mpd_alloc , CSize -> CSize -> IO (Ptr ())
-#ccall mpd_calloc , CSize -> CSize -> IO (Ptr ())
-#ccall mpd_realloc , Ptr () -> CSize -> CSize -> Ptr CUChar -> IO (Ptr ())
-#ccall mpd_sh_alloc , CSize -> CSize -> CSize -> IO (Ptr ())
 #ccall mpd_qnew , IO (Ptr <mpd_t>)
 #ccall mpd_new , Ptr <mpd_context_t> -> IO (Ptr <mpd_t>)
-#ccall mpd_qnew_size , CInt -> IO (Ptr <mpd_t>)
 #ccall mpd_del , Ptr <mpd_t> -> IO ()
-#ccall mpd_uint_zero , Ptr <mpd_uint_t> -> <mpd_size_t> -> IO ()
-#ccall mpd_qresize , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <uint32_t> -> IO CInt
-#ccall mpd_qresize_zero , Ptr <mpd_t> -> <mpd_ssize_t> -> Ptr <uint32_t> -> IO CInt
-#ccall mpd_minalloc , Ptr <mpd_t> -> IO ()
-#ccall mpd_resize , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO CInt
-#ccall mpd_resize_zero , Ptr <mpd_t> -> CInt -> Ptr <mpd_context_t> -> IO CInt
